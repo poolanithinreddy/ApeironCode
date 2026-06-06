@@ -36,7 +36,10 @@ describe('CLI real-user flow', () => {
   it('1. fresh config shows setup-first state', () => {
     const state = detectFirstRunState({}, {});
     expect(state.isFirstRun).toBe(true);
-    expect(shouldShowFirstRunSetup(state, {argv: ['node', 'apeironcode']})).toBe(true);
+    expect(shouldShowFirstRunSetup(state, {
+      argv: ['node', 'apeironcode'],
+      env: {},
+    })).toBe(true);
   });
 
   it('2-3. choosing GitHub Models saves config and restart shows compact home', async () => {

@@ -1,10 +1,8 @@
-import path from 'node:path';
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import {createAgent, createWorkspace, type WorkspaceSetup} from '../helpers/workflow.js';
+import {fixturePath} from '../support/fixturePath.js';
 
-const fixtureRoot = path.resolve(
-  '/Users/nithinreddy/Documents/opencode/tests/fixtures/plugin-workspace',
-);
+const fixtureRoot = fixturePath('plugin-workspace');
 
 describe('Workflow: Plugin Tool Execution', () => {
   let workspace: WorkspaceSetup;

@@ -25,6 +25,8 @@
     "docs/connectors.md",
     "docs/context-engine.md",
     "docs/demo-recording.md",
+    "docs/assets/apeironcode-demo.gif",
+    "docs/assets/apeironcode-demo.txt",
     "docs/github.md",
     "docs/history.md",
     "docs/hooks.md",
@@ -118,9 +120,6 @@
     "smoke:workflows": "vitest run tests/workflows",
     "smoke:all": "npm run smoke:cli && npm run smoke:workflows",
     "acceptance": "npm run typecheck && npm run lint && npm run test && npm run build",
-    "private:vscode:test": "cd extensions/vscode && npm test",
-    "private:vscode:compile": "cd extensions/vscode && npx tsc -p tsconfig.json --noEmit",
-    "private:vscode:package": "cd extensions/vscode && npm run package",
     "ci": "npm run typecheck && npm run lint && npm run build && npm test && npm run check:file-size && npm pack --dry-run"
   },
   "keywords": [

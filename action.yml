@@ -55,4 +55,4 @@ runs:
       run: '"$GITHUB_ACTION_PATH/node_modules/.bin/tsx" "$GITHUB_ACTION_PATH/src/githubAction/main.ts"'
 branding:
   icon: 'git-pull-request'
-  color: 'purple'
+  color: 'green'

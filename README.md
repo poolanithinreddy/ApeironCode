@@ -4,6 +4,8 @@ Open-source, local-first AI coding agent for developers who want control.
 
 **Use any model. See every action. Keep your code under your rules.**
 
+![ApeironCode fixes a failing test with approval-gated edits](./docs/assets/apeironcode-demo.gif)
+
 [![CI](https://github.com/poolanithinreddy/ApeironCode/actions/workflows/ci.yml/badge.svg)](https://github.com/poolanithinreddy/ApeironCode/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Node.js 18+](https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white)](./package.json)
@@ -37,28 +39,11 @@ Mock mode is deterministic and needs no API key. For real work, configure
 
 ## See It Work
 
-<!-- Replace this callout with docs/assets/apeironcode-demo.gif after recording
-the real approval flow documented in docs/demo-recording.md. -->
-
-```text
-$ apeironcode "fix the failing test"
-
-ApeironCode · mock · ./calculator · test-fix
-✓ Read src/math.ts
-✓ Read tests/math.test.ts
-? Apply patch to src/math.ts?  [approve / reject]
-✓ Edit src/math.ts  +1/-1
-? Run npm test?  [approve / reject]
-✓ Tests passed
-
-Fixed the boundary condition in add().
-Files: src/math.ts
-Tests: npm test (passed)
-```
-
-This is the exact flow the project is designed around: inspect, preview,
-approve, validate, summarize. The reproducible recording script is documented
-in [docs/demo-recording.md](./docs/demo-recording.md).
+The demo above is a real no-key mock-provider run against
+[`examples/fix-failing-test/before`](./examples/fix-failing-test/before).
+It reads the failing source, previews the exact patch, waits for approval,
+reruns the test with approval, and reports the passing result. Reproduction
+steps are documented in [docs/demo-recording.md](./docs/demo-recording.md).
 
 ## Why ApeironCode?
 
@@ -118,13 +103,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: poolanithinreddy/ApeironCode@main
+      - uses: poolanithinreddy/ApeironCode@v0.1.0
         with:
           mode: pr-review
           dry_run: true
 ```
 
-Pin a release tag instead of `main` once the first GitHub release is published.
 See the [complete action example](./examples/github-action-pr-review/).
 
 ## Features

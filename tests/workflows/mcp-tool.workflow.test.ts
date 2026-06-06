@@ -1,11 +1,9 @@
-import path from 'node:path';
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 
 import {createAgent, createWorkspace, type WorkspaceSetup} from '../helpers/workflow.js';
+import {fixturePath} from '../support/fixturePath.js';
 
-const fixtureRoot = path.resolve(
-  '/Users/nithinreddy/Documents/opencode/tests/fixtures/mcp-workspace',
-);
+const fixtureRoot = fixturePath('mcp-workspace');
 
 describe('Workflow: MCP Tool Execution', () => {
   let workspace: WorkspaceSetup;

@@ -10,10 +10,9 @@ import {
   searchProjectSymbolsDetailed,
 } from '../../src/context/repoIntelligence.js';
 import {RepoMapManager} from '../../src/context/repoMap.js';
+import {fixturePath} from '../support/fixturePath.js';
 
-const fixtureRoot = path.resolve(
-  '/Users/nithinreddy/Documents/opencode/tests/fixtures/node-basic',
-);
+const fixtureRoot = fixturePath('node-basic');
 
 const tempDirs: string[] = [];
 

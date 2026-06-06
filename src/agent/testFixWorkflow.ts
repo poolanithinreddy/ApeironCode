@@ -21,23 +21,30 @@ export const isLikelyTestFixPrompt = (prompt: string): boolean => {
   );
 };
 
+const stripTestDuration = (testName: string): string => {
+  return testName.replace(/\s+\(\d+(?:\.\d+)?ms\)$/u, '').trim();
+};
+
 const parseTestOutput = (output: string): TestResult => {
   const lines = output.split('\n');
 
   let passed = 0;
   let failed = 0;
   let skipped = 0;
-  const failedTests: string[] = [];
+  let observedPassed = 0;
+  const observedFailedTests = new Set<string>();
   const errors: string[] = [];
 
   for (const line of lines) {
-    if (line.includes('passed')) {
-      const match = line.match(/(\d+)\s+passed/);
-      if (match) passed = parseInt(match[1]!);
+    if (/\bpass(?:ed)?\b/u.test(line)) {
+      const match = line.match(/(?:\bpass(?:ed)?\s+(\d+)\b|\b(\d+)\s+passed\b)/u);
+      const count = match?.[1] ?? match?.[2];
+      if (count) passed = parseInt(count);
     }
-    if (line.includes('failed')) {
-      const match = line.match(/(\d+)\s+failed/);
-      if (match) failed = parseInt(match[1]!);
+    if (/\bfail(?:ed)?\b/u.test(line)) {
+      const match = line.match(/(?:\bfail(?:ed)?\s+(\d+)\b|\b(\d+)\s+failed\b)/u);
+      const count = match?.[1] ?? match?.[2];
+      if (count) failed = parseInt(count);
     }
     if (line.includes('skipped')) {
       const match = line.match(/(\d+)\s+skipped/);
@@ -46,14 +53,23 @@ const parseTestOutput = (output: string): TestResult => {
 
     if (/^✓|^✔|PASS|PASSED/.test(line.trim())) {
       const testName = line.replace(/^[✓✔]/,'').replace(/PASS/i, '').trim();
-      if (testName) passed += 1;
+      if (testName) observedPassed += 1;
     }
 
     if (/^✗|^✖|^●|FAIL|FAILED/.test(line.trim())) {
-      const testName = line.replace(/^[✗✖●]/,'').replace(/FAIL/i, '').trim();
-      if (testName && !testName.startsWith('Tests:')) {
-        failedTests.push(testName);
-        failed += 1;
+      const trimmedLine = line.trim();
+      const withoutStatus = /^[✗✖●]/u.test(trimmedLine)
+        ? trimmedLine.replace(/^[✗✖●]\s*/u, '')
+        : trimmedLine.replace(/^FAIL(?:ED)?\s*/iu, '');
+      const testName = stripTestDuration(
+        withoutStatus.trim(),
+      );
+      if (
+        testName
+        && !/^Tests?:/iu.test(testName)
+        && !/^failing tests?:?$/iu.test(testName)
+      ) {
+        observedFailedTests.add(testName);
       }
     }
 
@@ -62,6 +78,9 @@ const parseTestOutput = (output: string): TestResult => {
     }
   }
 
+  const failedTests = Array.from(observedFailedTests);
+  passed = Math.max(passed, observedPassed);
+  failed = Math.max(failed, failedTests.length);
   const totalTests = passed + failed;
 
   return {
@@ -118,7 +137,7 @@ export const identifyAffectedSourceFiles = (failedTests: string[], output = ''):
   for (const testFile of discoveredTestFiles) {
     const normalizedTestFile = testFile.trim();
     const mappedSourceFile = normalizedTestFile
-      .replace(/^tests\//u, 'src/')
+      .replace(/^tests?\//u, 'src/')
       .replace(/^__tests__\//u, 'src/')
       .replace(/\.(?:test|spec)\./u, '.');
 
@@ -129,16 +148,19 @@ export const identifyAffectedSourceFiles = (failedTests: string[], output = ''):
   }
 
   for (const test of failedTests) {
-    const match = test.match(/(.+?)\s*(?:›|at|in)/);
-    if (match) {
-      let filePath = match[1]!.trim();
-      if (filePath.includes('.test.') || filePath.includes('.spec.')) {
-        filePath = filePath
-          .replace(/\.test\./, '.')
-          .replace(/\.spec\./, '.');
-      }
-      files.add(filePath);
+    const testFile = test.match(/[A-Za-z0-9_./-]+\.(?:test|spec)\.[cm]?[jt]sx?/u)?.[0];
+    if (!testFile) {
+      continue;
     }
+
+    const sourceFile = testFile
+      .replace(/^tests?\//u, 'src/')
+      .replace(/^__tests__\//u, 'src/')
+      .replace(/\.(?:test|spec)\./u, '.');
+    if (sourceFile !== testFile) {
+      files.add(sourceFile);
+    }
+    files.add(testFile);
   }
 
   return Array.from(files);

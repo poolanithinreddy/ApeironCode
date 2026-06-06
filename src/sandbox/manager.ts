@@ -8,6 +8,8 @@ import {PodmanSandboxRunner} from './runners/podman.js';
 import {FirejailSandboxRunner} from './runners/firejail.js';
 import {trace} from '../utils/trace.js';
 
+type LocalKillSignal = 'SIGTERM' | 'SIGKILL';
+
 export interface SandboxManagerOptions {
   preferredBackend?: SandboxBackendId;
   allowFallbackToLocal?: boolean;
@@ -72,6 +74,11 @@ export class SandboxManager {
       if (cached) {
         return cached;
       }
+    }
+
+    if (process.env['OPENCODE_TEST_OFFLINE'] === '1' && this.options.allowFallbackToLocal !== false) {
+      this.availableBackend = 'local';
+      return 'local';
     }
 
     // Try preferred backend first
@@ -163,9 +170,10 @@ export class SandboxManager {
     const timeoutMs = options.timeout ?? 20000;
 
     try {
-      const result = await execa('sh', ['-c', command], {
+      const subprocess = execa('sh', ['-c', command], {
+        detached: process.platform !== 'win32',
+        forceKillAfterDelay: 100,
         reject: false,
-        timeout: timeoutMs,
         signal: options.signal,
         cwd: options.cwd,
         env: {
@@ -173,8 +181,36 @@ export class SandboxManager {
           ...options.env,
         },
       });
+      let timedOut = false;
+      let forceKillTimer: ReturnType<typeof setTimeout> | undefined;
+      const timeoutTimer = setTimeout(() => {
+        timedOut = true;
+        this.killLocalProcess(subprocess.pid, 'SIGTERM', subprocess.kill.bind(subprocess));
+        forceKillTimer = setTimeout(() => {
+          this.killLocalProcess(subprocess.pid, 'SIGKILL', subprocess.kill.bind(subprocess));
+        }, 100);
+      }, timeoutMs);
+
+      const result = await subprocess.finally(() => {
+        clearTimeout(timeoutTimer);
+        if (forceKillTimer) {
+          clearTimeout(forceKillTimer);
+        }
+      });
 
       const durationMs = Date.now() - startTime;
+
+      if (timedOut) {
+        return {
+          ok: false,
+          exitCode: 124,
+          stdout: this.normalizeOutput(result.stdout ?? ''),
+          stderr: `Command timed out after ${timeoutMs}ms`,
+          backend: 'local',
+          durationMs,
+          reason: 'timeout',
+        };
+      }
 
       return {
         ok: result.exitCode === 0,
@@ -212,6 +248,23 @@ export class SandboxManager {
         reason: 'execution_error',
       };
     }
+  }
+
+  private killLocalProcess(
+    pid: number | undefined,
+    signal: LocalKillSignal,
+    killSubprocess: (signal?: LocalKillSignal) => boolean,
+  ): void {
+    if (pid !== undefined && process.platform !== 'win32') {
+      try {
+        process.kill(-pid, signal);
+        return;
+      } catch {
+        // The process may have exited between the timeout and signal delivery.
+      }
+    }
+
+    killSubprocess(signal);
   }
 
   private normalizeOutput(text: string): string {

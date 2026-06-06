@@ -11,6 +11,7 @@ import type {SessionStore} from '../../src/sessions/store.js';
 import {createDefaultToolRegistry} from '../../src/tools/registry.js';
 import {executeSlashCommand, listSlashCommandDefinitions, type SlashCommandContext} from '../../src/ui/slashCommands.js';
 import {toDisplayString} from '../../src/utils/display.js';
+import {fixturePath} from '../support/fixturePath.js';
 import {createMockConfig} from '../support/mocks.js';
 
 const createResolvedConfig = (): ResolvedConfig => {
@@ -24,9 +25,7 @@ const createResolvedConfig = (): ResolvedConfig => {
   };
 };
 
-const fixtureRoot = path.resolve(
-  '/Users/nithinreddy/Documents/opencode/tests/fixtures/node-basic',
-);
+const fixtureRoot = fixturePath('node-basic');
 
 const createSlashContext = (overrides?: Partial<SlashCommandContext>) => {
   const messages: string[] = [];

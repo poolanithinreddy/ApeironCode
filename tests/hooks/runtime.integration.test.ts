@@ -9,8 +9,9 @@ import {ConfigStore} from '../../src/config/config.js';
 import {HookEventLog} from '../../src/hooks/eventLog.js';
 import {providerRegistry} from '../../src/providers/registry.js';
 import {createDefaultToolRegistry} from '../../src/tools/registry.js';
+import {fixturePath} from '../support/fixturePath.js';
 
-const fixtureRoot = path.resolve('/Users/nithinreddy/Documents/opencode/tests/fixtures/node-basic');
+const fixtureRoot = fixturePath('node-basic');
 
 describe('runtime hooks', () => {
   let projectDir: string;

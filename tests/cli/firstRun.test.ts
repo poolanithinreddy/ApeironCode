@@ -119,19 +119,11 @@ describe('shouldShowFirstRunSetup', () => {
   });
 
   it('returns true for plain run with first-run state and no CI', () => {
-    const originalCI = process.env.CI;
-    delete process.env.CI;
-    try {
-      // Note: this may return false in test env if stdout is not a TTY
-      // but the logic itself should not block for these args
-      const result = shouldShowFirstRunSetup(firstRunState, {argv: ['node', 'apeironcode']});
-      // In CI test env, CI may be set so result could be false; just test it returns a boolean
-      expect(typeof result).toBe('boolean');
-    } finally {
-      if (originalCI !== undefined) {
-        process.env.CI = originalCI;
-      }
-    }
+    const result = shouldShowFirstRunSetup(firstRunState, {
+      argv: ['node', 'apeironcode'],
+      env: {},
+    });
+    expect(result).toBe(true);
   });
 });
 

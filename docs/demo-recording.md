@@ -1,7 +1,7 @@
 # Demo Recording
 
-The README demo should be a real recording, not a mocked marketing animation.
-Record this flow in a disposable copy of `examples/fix-failing-test/before`.
+The README demo is based on a real no-key run in a disposable copy of
+`examples/fix-failing-test/before`.
 
 ## Setup
 
@@ -27,14 +27,19 @@ apeironcode setup --provider mock
 Keep the recording under 30 seconds, crop it to the terminal, and do not show
 tokens, home-directory paths, private repositories, or unrelated notifications.
 
-Export the final GIF to:
+Save a sanitized terminal transcript to:
 
 ```text
-docs/assets/apeironcode-demo.gif
+docs/assets/apeironcode-demo.txt
 ```
 
-Then replace the text preview in the README with:
+Render the README asset with Pillow available on `PYTHONPATH`:
 
-```markdown
-![ApeironCode fixes a failing test with approval-gated edits](./docs/assets/apeironcode-demo.gif)
+```bash
+PYTHONPATH=/path/to/pillow python3 scripts/render-terminal-gif.py \
+  docs/assets/apeironcode-demo.txt \
+  docs/assets/apeironcode-demo.gif
 ```
+
+The renderer produces a 26-second looping GIF and does not require a project
+runtime dependency.

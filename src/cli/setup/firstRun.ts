@@ -31,6 +31,7 @@ export interface FirstRunEnv {
 }
 
 export interface FirstRunOptions {
+  env?: FirstRunEnv;
   noSetup?: boolean;
   argv?: string[];
 }
@@ -91,7 +92,7 @@ export const shouldShowFirstRunSetup = (
 
   // Detect CI environment
   const argv = options.argv ?? process.argv;
-  const env = process.env;
+  const env = options.env ?? process.env;
   if (
     env.CI === '1' ||
     env.CI === 'true' ||

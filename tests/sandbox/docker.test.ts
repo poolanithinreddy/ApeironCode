@@ -18,7 +18,9 @@ const isDockerAvailable = async (): Promise<boolean> => {
   }
 };
 
-describe('DockerSandboxRunner', {skip: !(await isDockerAvailable())}, () => {
+describe('DockerSandboxRunner', {
+  skip: process.env['OPENCODE_TEST_OFFLINE'] === '1' || !(await isDockerAvailable()),
+}, () => {
   it('executes simple command in container', async () => {
     const runner = new DockerSandboxRunner();
     const result = await runner.run('echo "hello world"', {
@@ -86,7 +88,7 @@ describe('DockerSandboxRunner', {skip: !(await isDockerAvailable())}, () => {
     });
 
     expect(result.containerId).toBeDefined();
-    expect(result.containerId).toMatch(/^opencode-/);
+    expect(result.containerId).toMatch(/^apeironcode-/);
   });
 
   it('cleans up container on success', async () => {

@@ -3,7 +3,6 @@ import {describe, expect, it} from 'vitest';
 import {buildWelcomeDashboardModel, renderWelcomeDashboard} from '../../src/ui/welcomeDashboard.js';
 import {renderPermissionCard, renderToolResultCard} from '../../src/ui/toolCards.js';
 import {stripAnsi} from '../../src/ui/theme.js';
-import {buildChatHtml} from '../../extensions/vscode/src/views/webviewHtml.js';
 
 describe('Premium UI/UX E2E', () => {
   it('CLI welcome dashboard renders without secrets and supports no-color', () => {
@@ -22,21 +21,6 @@ describe('Premium UI/UX E2E', () => {
     expect(output).not.toContain('OpenCode');
   });
 
-  it('VS Code chat webview includes CSP and ApeironCode premium welcome', () => {
-    const html = buildChatHtml({
-      brainStatus: 'active',
-      connectionStatus: 'connected',
-      cspSource: 'vscode-resource:',
-      messages: [],
-      nonce: 'nonce',
-      pendingPermissions: [],
-      tasks: [],
-    });
-    expect(html).toContain('Content-Security-Policy');
-    expect(html).toContain('local-first coding agent OS');
-    expect(html).toContain('Project Brain: active');
-  });
-
   it('permission and tool cards preserve risk while truncating secret output', () => {
     const output = [
       renderPermissionCard({action: 'modify package.json', risk: 'high'}, {colorMode: 'no-color'}),
@@ -47,18 +31,4 @@ describe('Premium UI/UX E2E', () => {
     expect(output).not.toContain('secret-token');
   });
 
-  it('VS Code permission UI has risk text and approve deny controls', () => {
-    const html = buildChatHtml({
-      connectionStatus: 'connected',
-      cspSource: 'vscode-resource:',
-      messages: [],
-      nonce: 'nonce',
-      pendingPermissions: [{requestId: 'req-1', action: 'write file', toolName: 'edit_file'}],
-      tasks: [],
-    });
-    expect(html).toContain('Pending Permissions');
-    expect(html).toContain('Approve');
-    expect(html).toContain('Deny');
-    expect(html).toContain('write file');
-  });
 });

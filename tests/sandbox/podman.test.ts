@@ -5,14 +5,20 @@ import {PodmanSandboxRunner} from '../../src/sandbox/runners/podman.js';
 
 const isPodmanAvailable = async (): Promise<boolean> => {
   try {
-    const result = await execa('podman', ['--version'], {reject: false, timeout: 2000});
-    return result.exitCode === 0;
+    const versionResult = await execa('podman', ['--version'], {reject: false, timeout: 2000});
+    if (versionResult.exitCode !== 0) {
+      return false;
+    }
+    const serviceResult = await execa('podman', ['info'], {reject: false, timeout: 2000});
+    return serviceResult.exitCode === 0;
   } catch {
     return false;
   }
 };
 
-describe('PodmanSandboxRunner', {skip: !(await isPodmanAvailable())}, () => {
+describe('PodmanSandboxRunner', {
+  skip: process.env['OPENCODE_TEST_OFFLINE'] === '1' || !(await isPodmanAvailable()),
+}, () => {
   it('executes simple command in container', async () => {
     const runner = new PodmanSandboxRunner();
     const result = await runner.run('echo "hello world"', {
@@ -80,6 +86,6 @@ describe('PodmanSandboxRunner', {skip: !(await isPodmanAvailable())}, () => {
     });
 
     expect(result.containerId).toBeDefined();
-    expect(result.containerId).toMatch(/^opencode-/);
+    expect(result.containerId).toMatch(/^apeironcode-/);
   });
 });

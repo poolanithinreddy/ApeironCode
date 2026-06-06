@@ -11,8 +11,9 @@ import {buildSkillRunPlan} from '../../src/skills/runner.js';
 import {SkillStore} from '../../src/skills/store.js';
 import {providerRegistry} from '../../src/providers/registry.js';
 import {createDefaultToolRegistry} from '../../src/tools/registry.js';
+import {fixturePath} from '../support/fixturePath.js';
 
-const fixtureRoot = path.resolve('/Users/nithinreddy/Documents/opencode/tests/fixtures/node-basic');
+const fixtureRoot = fixturePath('node-basic');
 
 describe('skill runtime execution', () => {
   let projectDir: string;

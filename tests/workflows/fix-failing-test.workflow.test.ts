@@ -1,10 +1,9 @@
 import path from 'node:path';
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import {createAgent, createWorkspace, readFile, type WorkspaceSetup} from '../helpers/workflow.js';
+import {fixturePath} from '../support/fixturePath.js';
 
-const fixtureRoot = path.resolve(
-  '/Users/nithinreddy/Documents/opencode/tests/fixtures/node-failing-test',
-);
+const fixtureRoot = fixturePath('node-failing-test');
 
 describe('Workflow: Fix Failing Test', () => {
   let workspace: WorkspaceSetup;

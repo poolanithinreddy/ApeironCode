@@ -50,7 +50,9 @@ const getState = (messages: ProviderMessage[]): MockConversationState => {
 
 const extractExplicitPaths = (prompt: string): string[] => {
   const matches = prompt.match(/[A-Za-z0-9_./-]+\.[A-Za-z0-9_-]+/gu) ?? [];
-  return Array.from(new Set(matches.filter((match) => !/^\d+(?:\.\d+)+$/u.test(match))));
+  return Array.from(new Set(matches.filter((match) => (
+    /\.(?:[cm]?[jt]sx?|json|md|ya?ml|toml|css|html|sh)$/u.test(match)
+  ))));
 };
 
 const extractReplaceInstruction = (
@@ -80,6 +82,36 @@ const extractCommitMessage = (prompt: string): string => {
   }
 
   return 'update changes';
+};
+
+const buildDocumentedTestFix = (
+  prompt: string,
+  state: MockConversationState,
+  explicitPaths: string[],
+): {name: string; input: Record<string, unknown>} | null => {
+  if (!/failing tests?|fix the failing test|npm test/iu.test(prompt)) {
+    return null;
+  }
+
+  const sourcePath = explicitPaths.find((path) => /(?:^|\/)src\/math\.js$/u.test(path));
+  const readOutput = state.toolResults.get('read_file') ?? '';
+  if (
+    sourcePath
+    && readOutput.includes('clampScore')
+    && readOutput.includes('Math.min(99')
+    && !state.toolResults.has('edit_file')
+  ) {
+    return {
+      name: 'edit_file',
+      input: {
+        path: sourcePath,
+        replace: 'Math.min(100',
+        search: 'Math.min(99',
+      },
+    };
+  }
+
+  return null;
 };
 
 const buildExecutionSummary = (state: MockConversationState, prompt: string): string => {
@@ -118,6 +150,7 @@ const decideToolCalls = (messages: ProviderMessage[]): Array<{name: string; inpu
   const readCount = state.toolCalls.filter((call) => call.name === 'read_file').length;
   const nextExplicitPath = explicitPaths[readCount] ?? null;
   const replaceInstruction = extractReplaceInstruction(prompt, explicitPaths[0] ?? null);
+  const documentedTestFix = buildDocumentedTestFix(prompt, state, explicitPaths);
 
   if (/explain this repo|explain this codebase/u.test(lowerPrompt)) {
     if (!state.toolResults.has('package_info')) {
@@ -166,6 +199,14 @@ const decideToolCalls = (messages: ProviderMessage[]): Array<{name: string; inpu
     if (/run test|failing tests|npm test/u.test(lowerPrompt) && !state.toolResults.has('test_runner')) {
       return [{name: 'test_runner', input: {}}];
     }
+    return [];
+  }
+
+  if (documentedTestFix) {
+    return [documentedTestFix];
+  }
+
+  if (state.toolResults.has('edit_file') && /failing tests?|fix the failing test|npm test/iu.test(prompt)) {
     return [];
   }
 

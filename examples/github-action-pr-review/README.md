@@ -15,5 +15,5 @@ The workflow checks out the pull request and invokes the action with read-only
 repository access. Keep `dry_run: true` until you have reviewed the output and
 configured narrow automation permissions.
 
-Use a release tag instead of `main` after the first release is published.
+The example pins the first public CLI alpha release, `v0.1.0`.
 Representative output is shown in `expected-output.json`.

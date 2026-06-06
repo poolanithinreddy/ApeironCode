@@ -1,7 +1,15 @@
-import {describe, expect, it} from 'vitest';
+import fs from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
+
+import {afterAll, beforeAll, describe, expect, it} from 'vitest';
+
 import {scanProject} from '../../src/agent/projectScanner.js';
 import {fileExists} from '../../src/utils/fs.js';
+
+const execFileAsync = promisify(execFile);
 
 describe('Workflow Fixtures', () => {
   describe('Node fixture: failing test', () => {
@@ -22,7 +30,21 @@ describe('Workflow Fixtures', () => {
   });
 
   describe('Git fixture: sample repo', () => {
-    const fixturePath = path.join(process.cwd(), 'tests/fixtures/git-sample');
+    let fixturePath: string;
+
+    beforeAll(async () => {
+      fixturePath = await fs.mkdtemp(path.join(os.tmpdir(), 'apeiron-git-fixture-'));
+      await fs.writeFile(path.join(fixturePath, 'README.md'), '# Git fixture\n', 'utf8');
+      await execFileAsync('git', ['init'], {cwd: fixturePath});
+      await execFileAsync('git', ['config', 'user.name', 'ApeironCode Test'], {cwd: fixturePath});
+      await execFileAsync('git', ['config', 'user.email', 'test@apeironcode.dev'], {cwd: fixturePath});
+      await execFileAsync('git', ['add', 'README.md'], {cwd: fixturePath});
+      await execFileAsync('git', ['commit', '-m', 'initial fixture'], {cwd: fixturePath});
+    });
+
+    afterAll(async () => {
+      await fs.rm(fixturePath, {force: true, recursive: true});
+    });
 
     it('should have git initialized', async () => {
       expect(await fileExists(path.join(fixturePath, '.git'))).toBe(true);

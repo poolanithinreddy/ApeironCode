@@ -10,8 +10,9 @@ import {ApprovalManager} from '../../src/safety/approvals.js';
 import {upsertMemoryFact} from '../../src/memory/graph.js';
 import {MemoryGraphStore} from '../../src/memory/graphStore.js';
 import {createDefaultToolRegistry} from '../../src/tools/registry.js';
+import {fixturePath} from '../support/fixturePath.js';
 
-const fixtureRoot = path.resolve('/Users/nithinreddy/Documents/opencode/tests/fixtures/node-basic');
+const fixtureRoot = fixturePath('node-basic');
 
 describe('agent prompt context integration', () => {
   let projectDir: string;

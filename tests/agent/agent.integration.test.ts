@@ -8,10 +8,9 @@ import {Agent} from '../../src/agent/Agent.js';
 import {ConfigStore} from '../../src/config/config.js';
 import {providerRegistry} from '../../src/providers/registry.js';
 import {createDefaultToolRegistry} from '../../src/tools/registry.js';
+import {fixturePath} from '../support/fixturePath.js';
 
-const fixtureRoot = path.resolve(
-  '/Users/nithinreddy/Documents/opencode/tests/fixtures/node-basic',
-);
+const fixtureRoot = fixturePath('node-basic');
 
 describe('Agent integration with mock provider', () => {
   let projectDir: string;
