@@ -1,0 +1,4 @@
+ApeironCode reads src/math.js and test/math.test.js.
+It previews changing Math.min(99, ...) to Math.min(100, ...).
+After edit approval, it asks to run npm test.
+The test passes and the summary reports src/math.js as changed.

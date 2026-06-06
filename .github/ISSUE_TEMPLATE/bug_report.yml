@@ -1,0 +1,66 @@
+name: Bug report
+description: Report a problem with ApeironCode
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please do **not** paste real API keys,
+        tokens, or private code. ApeironCode is early alpha — details help a lot.
+  - type: input
+    id: version
+    attributes:
+      label: ApeironCode version / commit
+      placeholder: "0.1.0 or git commit SHA"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: "macOS 15 / Ubuntu 24.04 / Windows 11"
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Node version
+      placeholder: "node -v"
+    validations:
+      required: true
+  - type: input
+    id: provider
+    attributes:
+      label: Provider / model
+      placeholder: "anthropic / claude-..., ollama / qwen2.5-coder, mock, ..."
+  - type: textarea
+    id: prompt
+    attributes:
+      label: Command or prompt used
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / output (secrets removed)
+      render: shell
+  - type: dropdown
+    id: debug
+    attributes:
+      label: Was debug mode used? (APEIRONCODE_DEBUG=1 or --verbose)
+      options:
+        - "No"
+        - "Yes"

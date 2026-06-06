@@ -1,0 +1,14 @@
+{
+  "name": "math-bug-demo",
+  "version": "1.0.0",
+  "description": "A simple math module with a deliberate bug for testing",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vitest": "^3.0.0",
+    "typescript": "^5.0.0"
+  }
+}

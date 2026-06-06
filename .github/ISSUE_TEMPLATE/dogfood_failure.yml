@@ -1,0 +1,41 @@
+name: Dogfood failure
+description: Report when ApeironCode handled a real coding task poorly
+labels: [dogfood]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this when ApeironCode took the wrong route, edited the wrong file,
+        produced bad output, or claimed success when it failed. Remove secrets.
+  - type: textarea
+    id: prompt
+    attributes:
+      label: Prompt used
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: route-expected
+    attributes:
+      label: Route expected
+      placeholder: "e.g. build_static_app / modify_existing_app / error fix"
+  - type: input
+    id: route-actual
+    attributes:
+      label: Route actually taken
+  - type: textarea
+    id: files
+    attributes:
+      label: Files changed
+  - type: textarea
+    id: commands
+    attributes:
+      label: Commands run
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation result (feature acceptance / browser smoke / build)
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot (if a UI/visual issue)

@@ -1,0 +1,81 @@
+{
+  "configSignature": "package.json:1777352631428.6963",
+  "entries": [
+    {
+      "path": "package.json",
+      "kind": "file",
+      "language": "JSON",
+      "size": 108
+    },
+    {
+      "path": "src/example.ts",
+      "kind": "file",
+      "language": "TypeScript",
+      "size": 23
+    },
+    {
+      "path": "tests/check.mjs",
+      "kind": "file",
+      "language": "JavaScript",
+      "size": 302
+    }
+  ],
+  "projectScan": {
+    "buildCommand": null,
+    "configFiles": [
+      "package.json"
+    ],
+    "entrypoints": [],
+    "frameworks": [],
+    "git": {
+      "branch": null,
+      "changedFiles": 0,
+      "changedPaths": [],
+      "isRepo": false
+    },
+    "languages": [
+      "TypeScript/Node.js"
+    ],
+    "lintCommand": null,
+    "manifests": [
+      {
+        "commands": {
+          "test": "node tests/check.mjs"
+        },
+        "entrypoints": [],
+        "frameworks": [],
+        "kind": "package.json",
+        "languages": [
+          "TypeScript/Node.js"
+        ],
+        "path": "package.json",
+        "summary": "Node package fixture-node-basic",
+        "workspaces": []
+      }
+    ],
+    "monorepo": false,
+    "packageManager": null,
+    "projectName": "fixture-node-basic",
+    "projectSummary": "Project: fixture-node-basic\nLanguages: TypeScript/Node.js\nFrameworks: none detected\nPackage manager: unknown\nSource directories: src\nConfig files: package.json\nEntrypoints: none detected\nTest command: node tests/check.mjs\nLint command: none detected\nBuild command: none detected",
+    "sourceDirectories": [
+      "src"
+    ],
+    "testCommand": "node tests/check.mjs",
+    "workspaces": []
+  },
+  "fileCount": 3,
+  "languages": {
+    "JSON": 1,
+    "TypeScript": 1,
+    "JavaScript": 1
+  },
+  "entryPoints": [],
+  "testFiles": [
+    "tests/check.mjs"
+  ],
+  "configFiles": [
+    "package.json"
+  ],
+  "lastIndexed": "2026-06-06T22:20:18.322Z",
+  "version": "1.0"
+}

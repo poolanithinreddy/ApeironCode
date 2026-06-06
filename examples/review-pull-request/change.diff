@@ -1,0 +1,10 @@
+diff --git a/session.js b/session.js
+index 1111111..2222222 100644
+--- a/session.js
++++ b/session.js
+@@ -1,3 +1,3 @@
+-export const reportAuthFailure = (_token, error) => {
+-  console.error(`Authentication failed: ${error.message}`);
++export const reportAuthFailure = (token, error) => {
++  console.error(`Authentication failed for ${token}: ${error.message}`);
+ };

@@ -1,0 +1,6 @@
+{
+  "dryRun": true,
+  "status": "completed",
+  "workflow": "pr-review",
+  "message": "Review completed without posting changes."
+}

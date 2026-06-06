@@ -1,0 +1,9 @@
+{
+  "name": "apeironcode-workflow-runtime-demo",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node test.js",
+    "lint": "node -e \"console.log('lint ok')\""
+  }
+}

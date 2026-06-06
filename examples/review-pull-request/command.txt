@@ -1,0 +1,1 @@
+apeironcode --mode review "review examples/review-pull-request/change.diff"

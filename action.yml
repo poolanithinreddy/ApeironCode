@@ -1,0 +1,58 @@
+name: 'ApeironCode Action'
+description: 'Review pull requests and inspect CI failures with ApeironCode (dry-run by default).'
+author: 'poolanithinreddy'
+inputs:
+  provider:
+    description: 'Provider to use (e.g. anthropic, openai, ollama).'
+    required: false
+  model:
+    description: 'Model identifier for the chosen provider.'
+    required: false
+  mode:
+    description: 'Automation mode: auto | issue-to-pr | pr-review | ci-fix | mention.'
+    required: false
+    default: 'auto'
+  allowed_tools:
+    description: 'Comma/space-separated list of tools allowed for this run.'
+    required: false
+  dry_run:
+    description: 'If true (default), no GitHub writes are performed.'
+    required: false
+    default: 'true'
+  max_iterations:
+    description: 'Maximum agent iterations.'
+    required: false
+    default: '6'
+  run_tests:
+    description: 'Whether to run project tests during automation.'
+    required: false
+    default: 'false'
+  apeironcode_config_path:
+    description: 'Path to an ApeironCode config file (optional).'
+    required: false
+  opencode_config_path:
+    description: 'Legacy alias of apeironcode_config_path. Path to an ApeironCode config file (optional).'
+    required: false
+runs:
+  using: 'composite'
+  steps:
+    - name: Install ApeironCode Action dependencies
+      shell: bash
+      run: npm ci --ignore-scripts --prefix "$GITHUB_ACTION_PATH"
+    - name: Run ApeironCode Action
+      shell: bash
+      env:
+        INPUT_PROVIDER: ${{ inputs.provider }}
+        INPUT_MODEL: ${{ inputs.model }}
+        INPUT_MODE: ${{ inputs.mode }}
+        INPUT_ALLOWED_TOOLS: ${{ inputs.allowed_tools }}
+        INPUT_DRY_RUN: ${{ inputs.dry_run }}
+        INPUT_MAX_ITERATIONS: ${{ inputs.max_iterations }}
+        INPUT_RUN_TESTS: ${{ inputs.run_tests }}
+        INPUT_APEIRONCODE_CONFIG_PATH: ${{ inputs.apeironcode_config_path }}
+        INPUT_OPENCODE_CONFIG_PATH: ${{ inputs.opencode_config_path }}
+        GITHUB_TOKEN: ${{ github.token }}
+      run: '"$GITHUB_ACTION_PATH/node_modules/.bin/tsx" "$GITHUB_ACTION_PATH/src/githubAction/main.ts"'
+branding:
+  icon: 'git-pull-request'
+  color: 'purple'
