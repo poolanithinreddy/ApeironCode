@@ -1,0 +1,1 @@
+{"id":"demo-memory-1","createdAt":"2026-05-01T00:00:00.000Z","source":"team","confidence":"medium","entityType":"task","summary":"The demo project validates arithmetic with npm test.","proposedFacts":[{"type":"command","name":"npm test","observation":"Validates the isolated team demo fixture."}],"relatedFiles":["package.json","test.js"],"status":"pending","redactionApplied":true}

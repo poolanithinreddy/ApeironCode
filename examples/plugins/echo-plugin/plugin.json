@@ -1,0 +1,22 @@
+{
+  "name": "echo-plugin",
+  "version": "0.1.0",
+  "description": "Example ApeironCode plugin that echoes input",
+  "author": "ApeironCode Contributors",
+  "schemaVersion": 1,
+  "tools": [
+    {
+      "name": "echo",
+      "description": "Echoes back the input text",
+      "permissions": []
+    },
+    {
+      "name": "uppercase",
+      "description": "Converts text to uppercase",
+      "permissions": []
+    }
+  ],
+  "permissions": [],
+  "prompts": [],
+  "mcpServers": []
+}
