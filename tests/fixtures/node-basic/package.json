@@ -1,0 +1,7 @@
+{
+  "name": "fixture-node-basic",
+  "private": true,
+  "scripts": {
+    "test": "node tests/check.mjs"
+  }
+}

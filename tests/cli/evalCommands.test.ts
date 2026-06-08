@@ -1,0 +1,25 @@
+import {describe, expect, it, vi} from 'vitest';
+
+import {buildProgram, type CliHandlers} from '../../src/cli/commands.js';
+
+const handlers = (): CliHandlers => ({
+  addPermission: vi.fn(), agentRun: vi.fn(), agentShow: vi.fn(), agents: vi.fn(), checkPermission: vi.fn(), connectorEnv: vi.fn(), connectorList: vi.fn(), contextBudget: vi.fn(), contextExplain: vi.fn(), contextFiles: vi.fn(), contextIndex: vi.fn(), contextMap: vi.fn(), contextRefresh: vi.fn(), contextSymbols: vi.fn(), contextWhy: vi.fn(), continueTask: vi.fn(), cost: vi.fn(), debugConfig: vi.fn(), debugLogs: vi.fn(), debugTokens: vi.fn(), debugTraces: vi.fn(), deleteSession: vi.fn(), doctor: vi.fn(), evalList: vi.fn(), evalReport: vi.fn(), evalRun: vi.fn(), getConfigValue: vi.fn(), githubActions: vi.fn(), githubCiExplain: vi.fn(), githubIssue: vi.fn(), githubIssueComment: vi.fn(), githubIssueCreate: vi.fn(), githubIssues: vi.fn(), githubPr: vi.fn(), githubPrComment: vi.fn(), githubPrCreate: vi.fn(), githubPrReview: vi.fn(), githubPrSummary: vi.fn(), githubPrs: vi.fn(), githubRepo: vi.fn(), githubStatus: vi.fn(), history: vi.fn(), hookDisable: vi.fn(), hookEnable: vi.fn(), hookEvents: vi.fn(), hookList: vi.fn(), hookShow: vi.fn(), hookTest: vi.fn(), hooks: vi.fn(), listConfig: vi.fn(), listMcp: vi.fn(), listMcpTools: vi.fn(), listPermissions: vi.fn(), listPlugins: vi.fn(), listSessions: vi.fn(), listTools: vi.fn(), lspCache: vi.fn(), lspCacheClear: vi.fn(), lspDefinition: vi.fn(), lspDiagnostics: vi.fn(), lspReferences: vi.fn(), lspRestart: vi.fn(), lspSessions: vi.fn(), lspStatus: vi.fn(), lspStop: vi.fn(), lspSymbols: vi.fn(), memoryClear: vi.fn(), memoryConflicts: vi.fn(), memoryEdit: vi.fn(), memoryForgetSession: vi.fn(), memoryGraph: vi.fn(), memoryLearn: vi.fn(), memoryPrune: vi.fn(), memoryRelated: vi.fn(), memoryReview: vi.fn(), memoryRollback: vi.fn(), memorySearch: vi.fn(), memoryShow: vi.fn(), memorySource: vi.fn(), memoryStale: vi.fn(), memorySuggestionApprove: vi.fn(), memorySuggestionReject: vi.fn(), memorySuggestionShow: vi.fn(), memorySuggestions: vi.fn(), memorySummarize: vi.fn(), memoryWhy: vi.fn(), modelList: vi.fn(), modelRecommend: vi.fn(), ollamaModels: vi.fn(), ollamaPullHint: vi.fn(), ollamaRecommend: vi.fn(), ollamaStatus: vi.fn(), planApprove: vi.fn(), planClear: vi.fn(), planCreate: vi.fn(), planDelete: vi.fn(), planExecute: vi.fn(), planList: vi.fn(), planPause: vi.fn(), planResume: vi.fn(), planRevise: vi.fn(), planShow: vi.fn(), planStatus: vi.fn(), providerDoctor: vi.fn(), providerEnv: vi.fn(), providerFallback: vi.fn(), providerFallbackSet: vi.fn(), providerFallbackSimulate: vi.fn(), providerFallbackTest: vi.fn(), providerList: vi.fn(), providerSetup: vi.fn(), providerTest: vi.fn(), removePermission: vi.fn(), repoMap: vi.fn(), repoSummary: vi.fn(), repoSymbols: vi.fn(), revert: vi.fn(), runRoot: vi.fn(), sandboxDoctor: vi.fn(), sandboxStatus: vi.fn(), search: vi.fn(), securityStatus: vi.fn(), sessionAttach: vi.fn(), sessionDelete: vi.fn(), sessionExport: vi.fn(), sessionList: vi.fn(), sessionLocks: vi.fn(), sessionLogs: vi.fn(), sessionPause: vi.fn(), sessionResume: vi.fn(), sessionRunWorker: vi.fn(), sessionShow: vi.fn(), sessionStart: vi.fn(), sessionStop: vi.fn(), sessionUnlock: vi.fn(), sessions: vi.fn(), setConfigValue: vi.fn(), setup: vi.fn(), setupReset: vi.fn(), setupStatus: vi.fn(), share: vi.fn(), skillBrowser: vi.fn(), skillCreate: vi.fn(), skillDelete: vi.fn(), skillDisable: vi.fn(), skillEnable: vi.fn(), skillExport: vi.fn(), skillGenerate: vi.fn(), skillImport: vi.fn(), skillList: vi.fn(), skillRun: vi.fn(), skillShow: vi.fn(), skillTemplates: vi.fn(), skillTrust: vi.fn(), skillValidate: vi.fn(), skills: vi.fn(), teamApply: vi.fn(), teamArtifact: vi.fn(), teamArtifacts: vi.fn(), teamCockpit: vi.fn(), teamConflicts: vi.fn(), teamDiscard: vi.fn(), teamExport: vi.fn(), teamExportPatch: vi.fn(), teamIgnored: vi.fn(), teamMergePlan: vi.fn(), teamPlan: vi.fn(), teamResolve: vi.fn(), teamReview: vi.fn(), teamRun: vi.fn(), teamRunShow: vi.fn(), teamRuns: vi.fn(), teamValidatePatch: vi.fn(), teamWorkspaceCleanup: vi.fn(), teamWorkspaces: vi.fn(), testMcp: vi.fn(), webFetch: vi.fn(), webResearch: vi.fn(), webSearch: vi.fn(), workflowList: vi.fn(), workflowReport: vi.fn(), workflowRun: vi.fn(), workflowShow: vi.fn(),
+  resumeSession: vi.fn(),
+});
+
+describe('eval CLI commands', () => {
+  it('routes list, run, run --all, and result commands', async () => {
+    const h = handlers();
+    const program = buildProgram(h);
+
+    await program.parseAsync(['node', 'opencode', 'eval', 'list']);
+    await program.parseAsync(['node', 'opencode', 'eval', 'run', 'smoke']);
+    await program.parseAsync(['node', 'opencode', 'eval', 'run', '--all']);
+    await program.parseAsync(['node', 'opencode', 'eval', 'result', 'smoke']);
+
+    expect(h.evalList).toHaveBeenCalledTimes(1);
+    expect(h.evalRun).toHaveBeenCalledWith('smoke', {});
+    expect(h.evalRun).toHaveBeenCalledWith(undefined, {all: true});
+    expect(h.evalReport).toHaveBeenCalledWith('smoke');
+  });
+});

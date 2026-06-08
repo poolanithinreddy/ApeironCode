@@ -1,0 +1,11 @@
+{
+  "name": "echo-plugin",
+  "version": "1.0.0",
+  "description": "A simple echo plugin for testing",
+  "tools": [
+    {
+      "name": "echo",
+      "description": "Echo back the input text"
+    }
+  ]
+}

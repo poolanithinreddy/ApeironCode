@@ -1,0 +1,14 @@
+{
+  "mcp": {
+    "servers": {
+      "echo-test": {
+        "type": "stdio",
+        "command": "node",
+        "args": ["./server.mjs"],
+        "env": {
+          "NODE_ENV": "test"
+        }
+      }
+    }
+  }
+}
